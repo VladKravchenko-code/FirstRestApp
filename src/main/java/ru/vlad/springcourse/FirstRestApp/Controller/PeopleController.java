@@ -43,7 +43,7 @@ public class PeopleController {
     }
 
     @PostMapping
-    public ResponseEntity<PersonNotValidException> savePerson(@RequestBody @Valid Person person,
+    public ResponseEntity<PersonNotValidException> savePerson(@Valid Person person,
                                                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder stringBuilder = new StringBuilder();
