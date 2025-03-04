@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import ru.vlad.springcourse.FirstRestApp.Entity.Person;
@@ -43,22 +44,27 @@ public class PeopleController {
     }
 
     @PostMapping
-    public ResponseEntity<PersonNotValidException> savePerson(@Valid Person person,
-                                                              BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> savePerson(@RequestBody @Valid Person person,
+                                                 BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (ObjectError s : bindingResult.getAllErrors()){
-                stringBuilder.append(s.getDefaultMessage()).append(";\n");
+            StringBuilder errMsg = new StringBuilder();
+
+            List<FieldError> errors = bindingResult.getFieldErrors();
+
+            for (FieldError err : errors) {
+                errMsg.append(err.getField()).append(" - ")
+                        .append(err.getDefaultMessage()).append(";");
             }
-            throw new PersonNotValidException(stringBuilder.toString());
+
+            throw new PersonNotValidException(errMsg.toString());
         }
         peopleService.save(person);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @ExceptionHandler
     private ResponseEntity<PersonErrorResponse> handlerException(PersonNotValidException e) {
-        PersonErrorResponse err = new PersonErrorResponse("Person not valid", System.nanoTime());
-        return new ResponseEntity<>(err, HttpStatus.CONFLICT);
+        PersonErrorResponse err = new PersonErrorResponse(e.getMessage(), System.nanoTime());
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 }
