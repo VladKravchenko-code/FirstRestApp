@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.vlad.springcourse.FirstRestApp.Entity.Person;
 import ru.vlad.springcourse.FirstRestApp.Repository.PeopleRepository;
+import ru.vlad.springcourse.FirstRestApp.util.PersonNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PeopleService {
@@ -22,7 +22,7 @@ public class PeopleService {
         return peopleRepository.findAll();
     }
 
-    public Optional<Person> findOne(int id) {
-        return peopleRepository.findById(id);
+    public Person findOne(int id) {
+        return peopleRepository.findById(id).orElseThrow(PersonNotFoundException::new);
     }
 }
