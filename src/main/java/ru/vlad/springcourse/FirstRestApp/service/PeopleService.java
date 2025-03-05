@@ -7,6 +7,7 @@ import ru.vlad.springcourse.FirstRestApp.models.Person;
 import ru.vlad.springcourse.FirstRestApp.repository.PeopleRepository;
 import ru.vlad.springcourse.FirstRestApp.util.PersonNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -30,11 +31,18 @@ public class PeopleService {
 
     @Transactional
     public void save(Person person) {
+        enrichPerson(person);
         peopleRepository.save(person);
     }
 
     @Transactional
     public void delete(int id) {
         peopleRepository.deleteById(id);
+    }
+
+    private void enrichPerson(Person person) {
+        person.setCreatedAt(LocalDateTime.now());
+        person.setUpdateAt(LocalDateTime.now());
+        person.setCreatedWho("ADMIN");
     }
 }

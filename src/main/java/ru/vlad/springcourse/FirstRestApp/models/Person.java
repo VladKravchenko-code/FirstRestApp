@@ -32,6 +32,7 @@ public class Person {
     private LocalDateTime updateAt;
 
     @Column(name = "created_who")
+    @NotEmpty
     private String createdWho;
 
     public Person() {

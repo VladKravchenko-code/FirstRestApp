@@ -1,4 +1,4 @@
 package ru.vlad.springcourse.FirstRestApp.util;
 
-public class PersonNotFoundException extends RuntimeException{
+public class PersonNotFoundException extends RuntimeException {
 }
