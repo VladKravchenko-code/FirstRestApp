@@ -1,14 +1,10 @@
-package ru.vlad.springcourse.FirstRestApp.Service;
+package ru.vlad.springcourse.FirstRestApp.service;
 
-import jakarta.validation.Valid;
-import jakarta.validation.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import ru.vlad.springcourse.FirstRestApp.Entity.Person;
-import ru.vlad.springcourse.FirstRestApp.Repository.PeopleRepository;
+import ru.vlad.springcourse.FirstRestApp.models.Person;
+import ru.vlad.springcourse.FirstRestApp.repository.PeopleRepository;
 import ru.vlad.springcourse.FirstRestApp.util.PersonNotFoundException;
 
 import java.util.List;
@@ -35,5 +31,10 @@ public class PeopleService {
     @Transactional
     public void save(Person person) {
         peopleRepository.save(person);
+    }
+
+    @Transactional
+    public void delete(int id) {
+        peopleRepository.deleteById(id);
     }
 }

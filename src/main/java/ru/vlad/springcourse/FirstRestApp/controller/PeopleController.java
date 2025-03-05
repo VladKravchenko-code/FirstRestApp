@@ -1,4 +1,4 @@
-package ru.vlad.springcourse.FirstRestApp.Controller;
+package ru.vlad.springcourse.FirstRestApp.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,10 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import ru.vlad.springcourse.FirstRestApp.Entity.Person;
-import ru.vlad.springcourse.FirstRestApp.Service.PeopleService;
+import ru.vlad.springcourse.FirstRestApp.models.Person;
+import ru.vlad.springcourse.FirstRestApp.service.PeopleService;
 import ru.vlad.springcourse.FirstRestApp.util.PersonErrorResponse;
 import ru.vlad.springcourse.FirstRestApp.util.PersonNotFoundException;
 import ru.vlad.springcourse.FirstRestApp.util.PersonNotValidException;
@@ -37,12 +36,6 @@ public class PeopleController {
         return peopleService.findOne(id);
     }
 
-    @ExceptionHandler
-    private ResponseEntity<PersonErrorResponse> handlerException(PersonNotFoundException e) {
-        PersonErrorResponse err = new PersonErrorResponse("Person not found", System.nanoTime());
-        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
-    }
-
     @PostMapping
     public ResponseEntity<HttpStatus> savePerson(@RequestBody @Valid Person person,
                                                  BindingResult bindingResult) {
@@ -60,6 +53,19 @@ public class PeopleController {
         }
         peopleService.save(person);
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
+        peopleService.findOne(id);
+        peopleService.delete(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<PersonErrorResponse> handlerException(PersonNotFoundException e) {
+        PersonErrorResponse err = new PersonErrorResponse("Person not found", System.nanoTime());
+        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
